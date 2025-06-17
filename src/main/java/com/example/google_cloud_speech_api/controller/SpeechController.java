@@ -1,6 +1,7 @@
 package com.example.google_cloud_speech_api.controller;
 
 import com.example.google_cloud_speech_api.dto.SpeechDto;
+import com.example.google_cloud_speech_api.service.ChatService;
 import com.example.google_cloud_speech_api.service.SpeechService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,4 +19,5 @@ public class SpeechController {
     public SpeechDto transcribeAudio(@RequestParam("file") MultipartFile file) throws Exception {
         return speechService.transcribe(file);
     }
+
 }

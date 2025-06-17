@@ -3,6 +3,7 @@ package com.example.google_cloud_speech_api.service;
 import com.example.google_cloud_speech_api.dto.SpeechDto;
 import com.google.cloud.speech.v1.*;
 import com.google.protobuf.ByteString;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,6 +11,9 @@ import java.io.IOException;
 
 @Service
 public class SpeechService {
+
+    @Autowired
+    private ChatService chatService;
 
     public SpeechDto transcribe(MultipartFile file) throws IOException {
         try (SpeechClient speechClient = SpeechClient.create()) {
@@ -34,9 +38,18 @@ public class SpeechService {
                 transcript.append(alternative.getTranscript()).append("\n");
             }
 
+            String message = transcript.toString();
+
             return SpeechDto.builder()
-                    .message(transcript.toString())
+                    .message(message)
+                    .medicalComplaint(getCIDWithMedicalComplaint(message))
                     .build();
         }
     }
+
+    public String getCIDWithMedicalComplaint(String message){
+        String text = "Como base no texto me retorne um sid medico: "+message;
+        return chatService.chat(text);
+    }
+
 }

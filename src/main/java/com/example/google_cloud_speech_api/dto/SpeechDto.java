@@ -8,5 +8,6 @@ import lombok.Data;
 public class SpeechDto {
 
     private String message;
+    private String medicalComplaint;
 
 }
