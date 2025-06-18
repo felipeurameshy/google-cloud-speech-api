@@ -39,15 +39,23 @@ public class SpeechService {
             }
 
             String message = transcript.toString();
+            String medicalComplaint = getMedicalComplaint(message);
+            String solution = getSolutions(medicalComplaint);
 
             return SpeechDto.builder()
                     .message(message)
-                    .medicalComplaint(getCIDWithMedicalComplaint(message))
+                    .medicalComplaint(medicalComplaint)
+                    .solution(solution)
                     .build();
         }
     }
 
-    public String getCIDWithMedicalComplaint(String message){
+    public String getMedicalComplaint(String message){
+        String text = "Gerar um resumo somente sitomas de doenças desse texto: "+message;
+        return chatService.chat(text);
+    }
+
+    public String getSolutions(String message){
         String text = "Como base no texto me retorne um sid medico: "+message;
         return chatService.chat(text);
     }

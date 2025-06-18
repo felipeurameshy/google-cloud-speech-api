@@ -9,5 +9,6 @@ public class SpeechDto {
 
     private String message;
     private String medicalComplaint;
+    private String solution;
 
 }
