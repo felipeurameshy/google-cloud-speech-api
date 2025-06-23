@@ -60,4 +60,43 @@ public class SpeechService {
         return chatService.chat(text);
     }
 
+
+
+
+
+
+    public void transcribeChunk(MultipartFile file) throws IOException {
+
+        try (SpeechClient speechClient = SpeechClient.create()) {
+            byte[] audioBytes = file.getBytes();
+
+            //O áudio precisa estar em formato WAV com 16KHz, mono e PCM (WEBM_OPUS)
+
+            RecognitionConfig config = RecognitionConfig.newBuilder()
+                    .setEncoding(RecognitionConfig.AudioEncoding.WEBM_OPUS)
+                    .setSampleRateHertz(16000)
+                    .setLanguageCode("pt-BR")
+                    .build();
+
+            RecognitionAudio audio = RecognitionAudio.newBuilder()
+                    .setContent(ByteString.copyFrom(audioBytes))
+                    .build();
+
+            RecognizeResponse response = speechClient.recognize(config, audio);
+            StringBuilder transcript = new StringBuilder();
+
+            for (SpeechRecognitionResult result : response.getResultsList()) {
+                SpeechRecognitionAlternative alternative = result.getAlternativesList().get(0);
+                transcript.append(alternative.getTranscript()).append("\n");
+            }
+
+            String message = transcript.toString();
+            //String medicalComplaint = getMedicalComplaint(message);
+            //zString solution = getSolutions(medicalComplaint);
+
+            System.out.println("Texto: "+message);
+
+        }
+    }
+
 }
